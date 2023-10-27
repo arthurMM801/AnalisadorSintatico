@@ -70,11 +70,13 @@ def lexer(program):
 # Recursive Descent Parser
 def programa(tokens):
     sequencia_de_comandos(tokens)
-    print()
-    print([tokens[0].token_type, tokens[0].value])
+    # print()
+    # print([tokens[0].token_type, tokens[0].value])
 
     if tokens[0].token_type == "IDENTIFIER" and tokens[0].value == "END":
         print("Program parsed successfully.")
+    elif len(tokens) > 1:
+        print("Syntax error: ';' expected.")
     else:
         print("Syntax error: 'END' expected.")
 
@@ -229,8 +231,8 @@ def Compile(input_program):
     # Tokenize the input program
     tokens = lexer(input_program)
 
-    for t in tokens:
-        print([t.token_type, t.value])
+    # for t in tokens:
+    #     print([t.token_type, t.value])
 
     # Start parsing
     programa(tokens)
