@@ -1,0 +1,7 @@
+pp: LET x := 2 * 5;
+LET y := 5 / 1;
+GO TO n OF x, y ;
+READ x, y;
+IF 1+1 =  2+1 THEN LET y := 10 ELSE LET Y := 0;
+PRINT y
+END

@@ -1,0 +1,66 @@
+Gramática na notação BNF e EBNF
+
+
+(1) <programa> ::= <sequência de comandos> END
+programa ::= sequência_de_comandos END
+
+(2) <sequência de comandos> ::= <comando> | <sequência de comandos> ; <comando>
+sequência_de_comandos ::= comando ( ";" comando )*
+
+(3) <comando>::= <atribuição> | <desvio> | <leitura> | <impressão> | <decisão> | ε| <rótulo> : <comando>
+comando ::= atribuição | desvio | leitura | impressão | decisão | ε| rótulo ":" comando
+
+(4) <atribuição> ::= LET <identificador> := <expressão>
+atribuição ::= LET identificador := expressão
+
+(5) <expressão> ::= <expressão> + <termo> | <expressão> - <termo> | <termo>
+expressão ::= termo ( ("+" | "-") termo )*
+
+(6) <termo>::= <termo> * <fator> | <termo> / <fator> | <fator>
+termo :: = fator ( ("*" | "/") fator)*
+
+(7) <fator> ::= <identificador> | <número> | < <expressão> >
+fator ::= identificador | número | "<" expressão ">"
+
+(8) <desvio> ::= GO TO <rótulo> | GO TO <identificador> OF <lista de rótulos>
+desvio ::= "GO TO" ( rótulo | identificador "OF" lista_de_rótulos )
+
+(9) <lista de rótulos> ::= <rótulo> | <lista de rótulos> , <rótulo>
+lista_de_rótulos ::= rótulo (lista de rótulos  ","  rótulo)
+
+(10) <rótulo> ::= <identificador>
+rótulo ::= identificador
+
+
+(11) <leitura> ::= READ <lista de identificadores>
+leitura ::= "READ" lista_de_identificadores
+
+(12) <lista de identificadores> ::= ε | <identificador> , <lista de identificadores>
+lista_de_identificadores ::= ε | identificador ( "," identificador )*
+
+(13) <impressão> ::= PRINT <lista de expressões>
+impressão ::= "PRINT" lista de expressões
+
+(14) <lista de expressões> ::= ε | <expressão>, <lista de expressões>
+lista_de_expressões ::= ε |  expressão ( "," expressão )*
+
+(15) <decisão> ::= IF <comparação> THEN <comando> ELSE <comando>
+decisão ::= "IF" comparação "THEN " comando  "ELSE" comando
+
+(16) <comparação> ::= <expressão> <operador de comparação> <expressão>
+comparação ::= expressão operador_de_comparação expressão
+
+(17) <operador de comparação> ::= > | = | <
+operador_de_comparação ::= ">" | "=" | "<"
+
+(18) <identificador> ::= <letra> | <identificador> <letra> | <identificador> <dígito>
+indentificador ::= letra ( letra | dígito )*
+
+(19) <número> ::= <dígito> | <número> <dígito>
+número ::= dígito (dígito)*
+
+(20) <letra> ::= A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z
+letra ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U"| "V" | "W" | "X" | "Y" | "Z"
+
+(21) <dígito> ::= 0|1|2|3|4|5|6|7|8|9
+dígito ::= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
