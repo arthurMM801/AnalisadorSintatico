@@ -4,8 +4,10 @@ class Token:
         self.value = value
 
 # Lexical Analyzer
+current_line = 1
+
 def lexer(program):
-    keywords = ["LET", "GO", "TO", "OF", "READ", "PRINT", "IF", "THEN", "ELSE", "LABEL"]
+    keywords = ["LET", "GO", "TO", "OF", "READ", "PRINT", "IF", "THEN", "ELSE"]
     operators = ["+", "-", "*", "/", "<", ">", "="]
     separators = [",", ";", "(", ")", ":=", ":"]  # Added ":=" as a separator
 
@@ -69,6 +71,7 @@ def lexer(program):
 
 # Recursive Descent Parser
 def programa(tokens):
+    global current_line
     sequencia_de_comandos(tokens)
     # print()
     # print([tokens[0].token_type, tokens[0].value])
@@ -76,15 +79,30 @@ def programa(tokens):
     if tokens[0].token_type == "IDENTIFIER" and tokens[0].value == "END":
         print("Program parsed successfully.")
     elif len(tokens) > 1:
+        print_line_erro()
         print("Syntax error: ';' expected.")
+        exit(1)
     else:
+        print_line_erro()
         print("Syntax error: 'END' expected.")
+        exit(1)
+    current_line = 0
+
+def update_line_on_semicolon(tokens):
+    global current_line
+    while tokens and tokens[0].token_type == "SEPARATOR" and tokens[0].value == ";":
+        tokens.pop(0)
+        current_line += 1
+
+def print_line_erro():
+    global current_line
+    print(f"Linha {current_line} ")
 
 def sequencia_de_comandos(tokens):
     if tokens[0].token_type in ["LET", "GO", "TO", "READ", "PRINT", "IF", "IDENTIFIER"]:
         comando(tokens)
         if tokens[0].token_type == "SEPARATOR" and tokens[0].value == ";":
-            tokens.pop(0)
+            update_line_on_semicolon(tokens)
             sequencia_de_comandos(tokens)
 
 def comando(tokens):
@@ -102,10 +120,9 @@ def comando(tokens):
         rotulo(tokens)
         comando(tokens)
     elif tokens[0].token_type == "SEPARATOR" and tokens[0].value == ";":
-        # Handle empty command (ε)
-        tokens.pop(0)
-
+        update_line_on_semicolon()
     else:
+        print_line_erro()
         print("Syntax error: Invalid command.")
 
 def rotulo(tokens):
@@ -114,9 +131,13 @@ def rotulo(tokens):
         if tokens[0].token_type == "SEPARATOR" and tokens[0].value == ":":
             tokens.pop(0)
         else:
+            print_line_erro()
             print("Syntax error: ':' expected after the label.")
+            exit(1)
     else:
+        print_line_erro()
         print("Syntax error: Identifier expected after LABEL.")
+        exit(1)
 
 def atribuicao(tokens):
     if tokens[0].token_type == "LET":
@@ -127,9 +148,13 @@ def atribuicao(tokens):
                 tokens.pop(0)
                 expressao(tokens)
             else:
+                print_line_erro()
                 print("Syntax error: ':=' expected.")
+                exit(1)
         else:
+            print_line_erro()
             print("Syntax error: Identifier expected.")
+            exit(1)
 
 def expressao(tokens):
     termo(tokens)
@@ -152,9 +177,13 @@ def fator(tokens):
         if tokens[0].token_type == "SEPARATOR" and tokens[0].value == ")":
             tokens.pop(0)
         else:
+            print_line_erro()
             print("Syntax error: ')' expected.")
+            exit(1)
     else:
+        print_line_erro()
         print("Syntax error: Identifier, Number, or '(' expected.")
+        exit(1)
 
 def desvio(tokens):
     if tokens[0].token_type == "GO":
@@ -167,13 +196,21 @@ def desvio(tokens):
                     tokens.pop(0)
                     lista_de_rotulos(tokens)
                 else:
+                    print_line_erro()
                     print("Syntax error: 'OF' expected.")
+                    exit(1)
             else:
+                print_line_erro()
                 print("Syntax error: Identifier expected.")
+                exit(1)
         else:
+            print_line_erro()
             print("Syntax error: 'TO' expected.")
+            exit(1)
     else:
+        print_line_erro()
         print("Syntax error: 'GO' expected.")
+        exit(1)
 
 def lista_de_rotulos(tokens):
     if tokens[0].token_type == "IDENTIFIER":
@@ -217,9 +254,13 @@ def decisao(tokens):
                 tokens.pop(0)
                 comando(tokens)
             else:
+                print_line_erro()
                 print("Syntax error: 'ELSE' expected.")
+                exit(1)
         else:
+            print_line_erro()
             print("Syntax error: 'THEN' expected.")
+            exit(1)
 
 def comparacao(tokens):
     expressao(tokens)
@@ -231,8 +272,8 @@ def Compile(input_program):
     # Tokenize the input program
     tokens = lexer(input_program)
 
-    # for t in tokens:
-    #     print([t.token_type, t.value])
+    for t in tokens:
+        print([t.token_type, t.value])
 
     # Start parsing
     programa(tokens)
