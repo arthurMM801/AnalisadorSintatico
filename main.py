@@ -1,5 +1,5 @@
 from Utils import read_program_from_file
-from Compilador import Compile
+from AnalisadorLexico import Compile
 
 def main():
     file_path = "Programa.txt"
